@@ -31,7 +31,7 @@ class ProductController extends Controller
         if ($filters->count() < 1) {
             return $this->error($message = 'no products found', [], $code = 404);
         }
-        return $this->success(ProductResource::collection($filters), '', true, 200);
+        return $this->paginate(ProductResource::collection($filters));
     }
 
 
