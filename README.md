@@ -1,67 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+introduction:
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+this is a system of categories that have nested relationships
+as each category has a parent category or no
+also each category has a lower level categories or no
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+also there are products that each product  can belongs to  multiple categories
+so the relation between categories and products is (many to many)
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+also there is reviews table
+as each product may be has many reviews or not
+so relationship is (one to many) between product and reviews
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+also there is  an advanced filter function
+as you can filter the product by its name or description or price
+or any other category or lower or higher level categories names
+by its relation
+by only the parameter filter
+or you can make no filter and get all products list
+when you set the filter parameter to be null
+in search function in ProductController
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+CategoryController
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+index function
+      get all category with its parent category and its children categories
+      the pagination variable is in the env file
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-"# advancedCategories" 
+show function
+      check if Category is found or no  after that
+      show unique products   from   category and sub categories and parent category
+      and also show these categories
+
+
+store function
+    store new category
+    and attach it to another   category   to be parent category or make parent id null that means has no parent category
+
+delete function
+         * first check if the category is found or no
+         * then check
+         * if the category has childern or no if no so you can not delete
+         *  until delete those children first
+         * *
+         * then check
+         * if the category has products or no if no so you can not delete
+         *  until delete those products first
+
+
+
+
+###############################################################################################
+
+ProductController
+
+search function
+        here you can search by  name of category or sub category  or any category has relation with that product
+        or by name of product or by description of product  or by price of product or
+        if you want make no parameter for search it will get all products list
+        so it is optional to make filter or no
+        also appends() method that i used is refer to apply
+        this function always to the other pagination links with the same filter parameter
+
+
+show function
+        here you can show the product with its categories  as the relationship between products and categories is many to many
+        as each product can be belongs to multiple categories
+
+
+
+store function
+    here you can add new product
+     name ,description ,price
+     then   attach this product
+     to a category or multiple categories (array of categories = $request->category_id) as you want
+
+
+update function
+    here you can update product and sync this product to a category
+    or multiple categories as this function is making detaching first then making attaching for ($request->category_id) array
+
+
+destroy function
+    delete the product
+
+
+
+###############################################################################################
+
+
+ReviewController
+
+
+
+index function
+    get a product with its reviews in descinding order if this product has reviews
+    if no it will show the product with ths message 'there is no reviews yet'
+
+
+store function
+    store review to a certain product
+    as follow :
+    title, body, rating(1 to 5)
+
+show function
+    show a certain product with a certain review
+    by two parameters : product_id , review_id
+
+update function
+        update a certain     review
+        by two parameters : product_id , review_id
+
+destroy function
+        delete a certain     review
+        by two parameters : product_id , review_id
